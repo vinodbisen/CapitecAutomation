@@ -1,0 +1,53 @@
+[
+  {
+    "firstname": "Vinod",
+    "lastname": "Bisen",
+    "totalprice": 999,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-01-01",
+        "checkout": "2024-02-02"
+    },
+    "additionalneeds": "Extra pillows please"
+},{
+    "firstname": "Hridaan",
+    "lastname": "Bisen",
+    "totalprice": 1024,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-02-02",
+        "checkout": "2024-03-02"
+    },
+    "additionalneeds": "Extra bed please"
+},{
+    "firstname": "Shradha",
+    "lastname": "Bisen",
+    "totalprice": 1500,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-01-21",
+        "checkout": "2024-01-22"
+    },
+    "additionalneeds": "Extra bed please"
+},{
+    "firstname": "Eereesha",
+    "lastname": "Bisen",
+    "totalprice": 500,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-01-01",
+        "checkout": "2024-01-02"
+    },
+    "additionalneeds": "Extra Toilet Paper please"
+},{
+    "firstname": "Radha",
+    "lastname": "Ji",
+    "totalprice": 5000,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-03-21",
+        "checkout": "2024-03-22"
+    },
+    "additionalneeds": "Extra Pillow please"
+}
+]

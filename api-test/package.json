@@ -1,5 +1,5 @@
 {
-  "name": "swaglabsui",
+  "name": "api-test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,6 @@
     "@types/node": "^20.11.30"
   },
   "dependencies": {
-    "pixelmatch": "^5.3.0",
-    "pngjs": "^7.0.0"
+    "random-number-range": "^1.0.1"
   }
 }
