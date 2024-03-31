@@ -109,5 +109,50 @@ test.describe('Visual Regression', () => {
             }
         }
     })
+    test('if user is login as problem_user then check the difference', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        checkoutinfopage = new CheckoutInfoPage(page)
+        checkoutoverpage = new CheckoutOverPage(page)
+        const users: string[] = ["standard_user", "problem_user"];
+        const outputDir = "visual_standard_problem_results";
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
 
+        for (var user of users) {
+            await homepage.navigate()
+
+            //screenshot
+            await captureScreenshot(page, `${user}_home`, outputDir);
+            await expect(page).toHaveTitle("Swag Labs")
+            await homepage.login(user, "secret_sauce")
+            await page.waitForTimeout(1000)
+            //screenshot
+            await captureScreenshot(page, `${user}_products`, outputDir);
+
+            await expect(page.getByText("Products")).toHaveText("Products")
+            await page.waitForTimeout(1000)
+            await page.locator("#react-burger-menu-btn").click()
+            await page.getByText("Logout").click()
+            await page.waitForTimeout(1000)
+        }
+        const uscreens: string[] = ["home", "products"];
+        for(var screen of uscreens)
+        {
+            const baselineImgPath = path.join(outputDir, `${users[0]}_${screen}.png`);
+            //console.log(baselineImgPath)
+            const newImgPath = path.join(outputDir, `${users[1]}_${screen}.png`);
+            //console.log(newImgPath)
+            const diffImgPath = path.join(outputDir, `diff_${screen}.png`);
+            //console.log(diffImgPath)
+            const numDiffPixels = compareImages(baselineImgPath, newImgPath, diffImgPath);
+            if (numDiffPixels === 0) {
+                console.log(`No visual differences found.`);
+            } else {
+                console.log(`Visual differences found. Diff image saved to ${diffImgPath}`);
+            }
+        }
+    })    
 })

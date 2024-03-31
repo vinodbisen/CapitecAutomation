@@ -1,0 +1,83 @@
+import { test, expect } from '@playwright/test';
+import HomePage from './pages/home.page';
+import ProductPage from './pages/product.page';
+import YourCartPage from './pages/yourcart.page';
+import SidebarMenu from './pages/sidebarmenu.page';
+test.describe('Sidebar Menu', () => {
+    let homepage:HomePage;
+    let productpage:ProductPage;
+    let yourcartpage:YourCartPage;
+    let sidebarmenu:SidebarMenu;
+    test('User is able to select the sidebar menu and click on All products', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        sidebarmenu = new SidebarMenu(page)
+        await homepage.navigate()
+        await expect(page).toHaveTitle("Swag Labs")      
+        await homepage.login("standard_user","secret_sauce")
+        await page.waitForTimeout(1000)
+        await expect(page.getByText("Products")).toHaveText("Products")
+        await page.waitForTimeout(1000)
+        await page.locator('#add-to-cart-sauce-labs-backpack').click()
+        await productpage.shoppingcart.click()
+        await page.waitForTimeout(1000)
+        await expect(page.getByText("Your Cart")).toHaveText("Your Cart")
+        await page.waitForTimeout(1000)
+        await sidebarmenu.burgermenu.click()
+        await sidebarmenu.allproduct.click()
+        await expect(page.getByText("Products")).toHaveText("Products")
+        await page.waitForTimeout(1000)
+    })
+    test('User is able to click on About in the menu', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        sidebarmenu = new SidebarMenu(page)
+        await homepage.navigate()
+        await expect(page).toHaveTitle("Swag Labs")      
+        await homepage.login("standard_user","secret_sauce")
+        await page.waitForTimeout(1000)
+        await expect(page.getByText("Products")).toHaveText("Products")
+        await page.waitForTimeout(1000)
+        await sidebarmenu.burgermenu.click()
+        await sidebarmenu.about.click()
+        await expect(page).toHaveTitle("Sauce Labs: Cross Browser Testing, Selenium Testing & Mobile Testing")
+        await page.waitForTimeout(1000)
+    })
+    test('User is able to click on Logout in the menu', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        sidebarmenu = new SidebarMenu(page)
+        await homepage.navigate()
+        await expect(page).toHaveTitle("Swag Labs")      
+        await homepage.login("standard_user","secret_sauce")
+        await page.waitForTimeout(1000)
+        await expect(page.getByText("Products")).toHaveText("Products")
+        await page.waitForTimeout(1000)
+        await sidebarmenu.burgermenu.click()
+        await sidebarmenu.logout.click()
+        await expect(page).toHaveTitle("Swag Labs")
+        await page.waitForTimeout(1000)
+    })
+    test('User is able to click on Reset App State in the menu', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        sidebarmenu = new SidebarMenu(page)
+        await homepage.navigate()
+        await expect(page).toHaveTitle("Swag Labs")      
+        await homepage.login("standard_user","secret_sauce")
+        await page.waitForTimeout(1000)
+        await expect(page.getByText("Products")).toHaveText("Products")
+        await page.waitForTimeout(1000)
+        await sidebarmenu.burgermenu.click()
+        await sidebarmenu.logout.click()
+        await expect(page).toHaveTitle("Swag Labs")
+        await page.waitForTimeout(1000)
+        // neeed to add the read empty cart 
+        // const x = await page.locator('#cart_contents_container >> text("1")')
+        // console.log(x)
+    })
+})

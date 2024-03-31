@@ -5,13 +5,49 @@ import YourCartPage from './pages/yourcart.page';
 import CheckoutInfoPage from './pages/checkoutinfo.page';
 import CheckoutOverPage from './pages/checkoutoverview.page';
 
-test.describe('Product screen', () => {
+test.describe('Checkout: COmplete screen', () => {
     let homepage:HomePage;
     let productpage:ProductPage;
     let yourcartpage:YourCartPage;
     let checkoutinfopage:CheckoutInfoPage;
     let checkoutoverpage:CheckoutOverPage;
-    test('User is able to select a item', async ({ page }) => {
+    test('User is able to click on finish button and complete the shopping order process', async ({ page }) => {
+        homepage = new HomePage(page)
+        productpage = new ProductPage(page)
+        yourcartpage = new YourCartPage(page)
+        checkoutinfopage = new CheckoutInfoPage(page)
+        checkoutoverpage = new CheckoutOverPage(page)
+        await homepage.navigate()
+        await expect(page).toHaveTitle("Swag Labs")
+
+        
+        await homepage.login("standard_user","secret_sauce")
+        //await page.pause()
+        //await page.waitForTimeout(1000)
+        //console.log(await page.getByText("Products").allInnerTexts())
+        await expect(page.getByText("Products")).toHaveText("Products")
+
+        const cartids: string[] = ["add-to-cart-sauce-labs-backpack","add-to-cart-sauce-labs-bike-light","add-to-cart-sauce-labs-bolt-t-shirt","add-to-cart-sauce-labs-fleece-jacket","add-to-cart-sauce-labs-onesie"]
+
+        for(var item of cartids){
+            
+            await page.locator(`#${item}`).click()
+        }
+        await page.waitForTimeout(1000)
+        await productpage.shoppingcart.click()
+        await expect(page.getByText("Your Cart")).toHaveText("Your Cart")
+        await page.waitForTimeout(1000)
+        await yourcartpage.checkout.click()
+        await expect(page.getByText("Checkout: Your Information")).toHaveText("Checkout: Your Information")
+        await checkoutinfopage.filluserinfo("Vinod","Bisen","7550")
+        await expect(page.getByText("Checkout: Overview")).toHaveText("Checkout: Overview")
+        await page.waitForTimeout(1000)
+        await checkoutoverpage.finish.click()
+        await expect(page.getByText("Checkout: Complete!")).toHaveText("Checkout: Complete!")
+        await expect(page.getByText("Thank you for your order!")).toHaveText("Thank you for your order!")
+        await page.waitForTimeout(1000)
+    })
+    test('User is to click on Back home button to go to Products screen', async ({ page }) => {
         homepage = new HomePage(page)
         productpage = new ProductPage(page)
         yourcartpage = new YourCartPage(page)
