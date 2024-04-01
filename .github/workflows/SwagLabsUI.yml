@@ -8,14 +8,15 @@ jobs:
     timeout-minutes: 60
     name: SwagLabsUI
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./SwagLabsUI
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
 
-    - name: Change to SwagLabsUI
-      run: cd ./SwagLabsUI
     - name: Print Current working directory
       run: pwd
     - name: Install dependencies
