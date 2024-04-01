@@ -16,6 +16,8 @@ jobs:
 
     - name: Change to SwagLabsUI
       run: cd SwagLabsUI
+    - name: Print Current working directory
+      run: pwd
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
