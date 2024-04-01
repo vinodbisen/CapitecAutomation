@@ -12,6 +12,7 @@
     "@types/node": "^20.11.30"
   },
   "dependencies": {
+    "playwright": "^1.42.1",
     "random-number-range": "^1.0.1"
   }
 }

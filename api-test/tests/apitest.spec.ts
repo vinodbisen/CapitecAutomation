@@ -15,11 +15,11 @@ test.describe("API Test", () => {
         "Content-Type": "application/json",
       }
     });
-    const data = await res.json();
-    console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
   })
 
-  test('Get Booking by Name', async ({ request }) => {
+  test('Get Booking by first name and last name', async ({ request }) => {
     const fname = "Jane";
     const lname = "Doe";
     const url = `https://restful-booker.herokuapp.com/booking?firstname=${fname}&lastname=${lname}`;
@@ -31,8 +31,38 @@ test.describe("API Test", () => {
         "Content-Type": "application/json",
       }
     });
-    const data = await res.json();
-    console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+  })
+  test('Get Booking by first Name', async ({ request }) => {
+    const fname = "Jane";
+    const url = `https://restful-booker.herokuapp.com/booking?firstname=${fname}`;
+
+    console.log(url);
+
+    const res = await request.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    // const data = await res.json();
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+  })
+  test('Get Booking by last name', async ({ request }) => {
+    const lname = "Doe";
+    const url = `https://restful-booker.herokuapp.com/booking?lastname=${lname}`;
+
+    console.log(url);
+
+    const res = await request.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    // const data = await res.json();
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
   })
 
   test('Get Booking by Checkin and Checkout Date', async ({ request }) => {
@@ -47,13 +77,41 @@ test.describe("API Test", () => {
         "Content-Type": "application/json",
       }
     });
-    const data = await res.json();
-    console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+  })
+  test('Get Booking by Checkin Date', async ({ request }) => {
+    const checkin = "2018-01-01";
+    const url = `https://restful-booker.herokuapp.com/booking?checkin=${checkin}`;
+
+    console.log(url);
+
+    const res = await request.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+  })
+  test('Get Booking by Checkout Date', async ({ request }) => {
+    const checkout = "2019-01-01";
+    const url = `https://restful-booker.herokuapp.com/booking?checkout=${checkout}`;
+
+    console.log(url);
+
+    const res = await request.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
   })
 
   test('Get Booking by Id', async ({ request }) => {
 
-    const n = getRandom(100, 110);
+    const n = getRandom(100, 200);
     console.log(n)
     const url = `https://restful-booker.herokuapp.com/booking/${n}`;
 
@@ -64,8 +122,8 @@ test.describe("API Test", () => {
         "Content-Type": "application/json",
       }
     });
-    const data = await res.json();
-    console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
   })
 
   test('Create Booking', async ({ request }) => {
@@ -75,28 +133,36 @@ test.describe("API Test", () => {
     const jobj = JSON.parse(filedata);
 
     const url = "https://restful-booker.herokuapp.com/booking";
+    for(var obj of jobj){
+      const jsondata = obj
 
-    const jsondata = jobj[0]
-
-    console.log(jsondata)
-
-    const res = await request.post(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: jsondata
-    });
-    const data = await res.json();
-    console.log(data)
+      const res = await request.post(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: jsondata
+      });
+      const data = await res.json();
+      console.log(data)
+      expect(res.ok()).toBeTruthy();
+      expect(res.status()).toBe(200);
+      expect(data.booking).toHaveProperty("firstname", obj.firstname);
+      expect(data.booking).toHaveProperty("lastname", obj.lastname);
+      expect(data.booking).toHaveProperty("totalprice", obj.totalprice);
+      expect(data.booking.depositpaid).toBeTruthy();
+      expect(data.booking.bookingdates).toHaveProperty("checkin", obj.bookingdates.checkin);
+      expect(data.booking.bookingdates).toHaveProperty("checkout", obj.bookingdates.checkout);
+      expect(data.booking).toHaveProperty("additionalneeds", obj.additionalneeds);
+    } 
   })
 
-  test('Update Booking with Basic Auth', async ({ request }) => {
+  test('Update Booking with BasicAuth', async ({ request }) => {
 
     const fs = require('fs');
     const filedata = fs.readFileSync(path.resolve(__dirname, './data/newdata.json'), 'utf8');
     const jobj = JSON.parse(filedata);
 
-    const id = "101"
+    const id = "103"
 
     const url = `https://restful-booker.herokuapp.com/booking/${id}`;
 
@@ -113,15 +179,24 @@ test.describe("API Test", () => {
     });
     const data = await res.json();
     console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+    expect(data).toHaveProperty("firstname", jobj[2].firstname);
+    expect(data).toHaveProperty("lastname", jobj[2].lastname);
+    expect(data).toHaveProperty("totalprice", jobj[2].totalprice);
+    expect(data.depositpaid).toBeTruthy();
+    expect(data.bookingdates).toHaveProperty("checkin", jobj[2].bookingdates.checkin);
+    expect(data.bookingdates).toHaveProperty("checkout", jobj[2].bookingdates.checkout);
+    expect(data).toHaveProperty("additionalneeds", jobj[2].additionalneeds);
   })
 
-  test('Update Booking with Cookies', async ({ request }) => {
+  test('Update Booking with the Cookies', async ({ request }) => {
 
     const fs = require('fs');
     const filedata = fs.readFileSync(path.resolve(__dirname, './data/newdata.json'), 'utf8');
     const jobj = JSON.parse(filedata);
 
-    const id = "101"
+    const id = "103"
 
     const tokendata = await GetAuthToken(request);
 
@@ -140,15 +215,24 @@ test.describe("API Test", () => {
     });
     const data = await res.json();
     console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+    expect(data).toHaveProperty("firstname", jobj[3].firstname);
+    expect(data).toHaveProperty("lastname", jobj[3].lastname);
+    expect(data).toHaveProperty("totalprice", jobj[3].totalprice);
+    expect(data.depositpaid).toBeTruthy();
+    expect(data.bookingdates).toHaveProperty("checkin", jobj[3].bookingdates.checkin);
+    expect(data.bookingdates).toHaveProperty("checkout", jobj[3].bookingdates.checkout);
+    expect(data).toHaveProperty("additionalneeds", jobj[3].additionalneeds);
   })
 
-  test('Partial Update Booking with Basic Auth', async ({ request }) => {
+  test('PartialUpdate Booking with Basic Auth', async ({ request }) => {
 
     const fs = require('fs');
     const filedata = fs.readFileSync(path.resolve(__dirname, './data/newdata.json'), 'utf8');
     const jobj = JSON.parse(filedata);
 
-    const id = "101"
+    const id = "103"
 
     const url = `https://restful-booker.herokuapp.com/booking/${id}`;
 
@@ -158,8 +242,7 @@ test.describe("API Test", () => {
             {
                 "checkin": jobj[4].bookingdates.checkin,
                 "checkout": jobj[4].bookingdates.checkout
-            },
-        "additionalneeds": jobj[4].bookingdates.additionalneeds
+            }
     };
 
     console.log(jsondata)
@@ -173,15 +256,20 @@ test.describe("API Test", () => {
     });
     const data = await res.json();
     console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+    expect(data).toHaveProperty("totalprice", jobj[4].totalprice);
+    expect(data.bookingdates).toHaveProperty("checkin", jobj[4].bookingdates.checkin);
+    expect(data.bookingdates).toHaveProperty("checkout", jobj[4].bookingdates.checkout);
   })
 
-  test('Partial Update Booking with Cookies', async ({ request }) => {
+  test('PartialUpdate Booking with Cookies', async ({ request }) => {
 
     const fs = require('fs');
     const filedata = fs.readFileSync(path.resolve(__dirname, './data/newdata.json'), 'utf8');
     const jobj = JSON.parse(filedata);
 
-    const id = "95"
+    const id = "103"
 
     const tokendata = await GetAuthToken(request);
 
@@ -193,8 +281,7 @@ test.describe("API Test", () => {
             {
                 "checkin": jobj[3].bookingdates.checkin,
                 "checkout": jobj[3].bookingdates.checkout
-            },
-        "additionalneeds": jobj[3].bookingdates.additionalneeds
+            }
     };
 
     console.log(jsondata)
@@ -208,10 +295,15 @@ test.describe("API Test", () => {
     });
     const data = await res.json();
     console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(200);
+    expect(data).toHaveProperty("totalprice", jobj[3].totalprice);
+    expect(data.bookingdates).toHaveProperty("checkin", jobj[3].bookingdates.checkin);
+    expect(data.bookingdates).toHaveProperty("checkout", jobj[3].bookingdates.checkout);
   })
 
   test('Delete Booking with Basic Auth', async ({ request }) => {
-    const id = "101"
+    const id = "153"
 
     const url = `https://restful-booker.herokuapp.com/booking/${id}`;
 
@@ -221,12 +313,13 @@ test.describe("API Test", () => {
         "Authorization": "Basic YWRtaW46cGFzc3dvcmQxMjM="
       },
     });
-    const data = await res.json();
-    console.log(data)
+    
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(201);
   })
 
   test('Delete Booking with Cookies', async ({ request }) => {
-    const id = "101"
+    const id = "154"
 
     const tokendata = await GetAuthToken(request);
 
@@ -238,8 +331,8 @@ test.describe("API Test", () => {
         "Cookie": `token=${tokendata.token}`
       },
     });
-    const data = await res.json();
-    console.log(data)
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(201);
   })
 
   test('Health Check', async ({ request }) => {
@@ -251,7 +344,8 @@ test.describe("API Test", () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(res.status())
+    expect(res.ok()).toBeTruthy();
+    expect(res.status()).toBe(201);
   })
 
 });
@@ -267,6 +361,8 @@ async function GetAuthToken(request) {
     }
   });
   const data = await res.json();
+  expect(res.ok()).toBeTruthy();
+  expect(res.status()).toBe(200);
   return data;
 }
 
